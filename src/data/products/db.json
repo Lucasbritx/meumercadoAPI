@@ -1,0 +1,32 @@
+{
+  "products": [
+    {
+      "codigo": "69bf8af7-3c20-48b1-897f-f9ac3e7c9df9",
+      "nome": "Itaipava",
+      "tipo": "Cerveja",
+      "estoque": "200",
+      "valor": "1.50"
+    },
+    {
+      "codigo": "616cd8aa-6729-49f0-a100-58e8f68b4f75",
+      "nome": "Itaipava",
+      "tipo": "Cerveja",
+      "estoque": "200",
+      "valor": "1.50"
+    },
+    {
+      "codigo": "b8ac7359-a898-4dd1-8949-958499519b66",
+      "nome": "Itaipava",
+      "tipo": "Cerveja",
+      "estoque": "200",
+      "valor": "1.50"
+    },
+    {
+      "codigo": "b5fe43c4-aa2e-457c-9fca-4f8ad1fe9620",
+      "nome": "Itaipava",
+      "tipo": "Cerveja",
+      "estoque": "200",
+      "valor": "1.50"
+    }
+  ]
+}
