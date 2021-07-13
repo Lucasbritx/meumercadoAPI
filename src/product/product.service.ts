@@ -21,12 +21,10 @@ const USER = 'user';
 export class ProductService {
   create(createProductDto: CreateProductDto) {
     const product = {
-      codigo: uuid(),
-      nome: 'Itaipava',
-      tipo: 'Cerveja',
-      estoque: '200',
-      valor: '1.50',
+      ...createProductDto,
+      id: uuid(),
     };
+
     const entities = JSON.parse(
       fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
     );
@@ -52,11 +50,32 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  update(id: string, updateProductDto: UpdateProductDto) {
+    const dbEntities = JSON.parse(
+      fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
+    );
+
+    const product = dbEntities[PRODUCTS].filter((entitie) => {
+      return entitie.id !== id;
+    });
+
+    const products = [...product, { ...updateProductDto, id: uuid() }];
+
+    fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
+
+    return updateProductDto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  remove(id: string) {
+    const dbEntities = JSON.parse(
+      fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
+    );
+
+    const products = dbEntities[PRODUCTS].filter((entitie) => {
+      return entitie.id !== id;
+    });
+
+    fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
+    return '';
   }
 }
