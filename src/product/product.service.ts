@@ -29,9 +29,14 @@ export class ProductService {
       fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
     );
 
-    if (
-      this.validateCodeProduct(createProductDto.codigo, createProductDto.nome)
-    ) {
+    const hasProduct = entities[PRODUCTS].find((entitie) => {
+      return (
+        entitie.codigo === createProductDto.codigo ||
+        entitie.nome === createProductDto.nome
+      );
+    });
+
+    if (!hasProduct) {
       entities[PRODUCTS].push(product);
 
       fs.writeFileSync(databaseFilePath, JSON.stringify(entities));
@@ -56,34 +61,20 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
-  validateCodeProduct(codigo: number, nome: string) {
+  update(id: string, updateProductDto: UpdateProductDto) {
     const entities = JSON.parse(
       fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
     );
 
-    const hasProduct = entities[PRODUCTS].find((entitie) => {
-      return entitie.codigo === codigo || entitie.codigo === nome;
-    });
-
-    if (hasProduct) {
-      return false;
-    }
-
-    return true;
-  }
-
-  update(id: string, updateProductDto: UpdateProductDto) {
-    const dbEntities = JSON.parse(
-      fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
-    );
-
-    const product = dbEntities[PRODUCTS].filter((entitie) => {
+    const product = entities[PRODUCTS].filter((entitie) => {
       return entitie.id !== id;
     });
 
-    if (
-      this.validateCodeProduct(updateProductDto.codigo, updateProductDto.nome)
-    ) {
+    const hasProduct = entities[PRODUCTS].find((entitie) => {
+      return entitie.nome === updateProductDto.nome;
+    });
+
+    if (!hasProduct) {
       const products = [...product, { ...updateProductDto, id: uuid() }];
 
       fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
