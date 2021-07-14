@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import fs from 'fs';
 import { resolve } from 'path';
@@ -29,11 +29,17 @@ export class ProductService {
       fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
     );
 
-    entities[PRODUCTS].push(product);
+    if (
+      this.validateCodeProduct(createProductDto.codigo, createProductDto.nome)
+    ) {
+      entities[PRODUCTS].push(product);
 
-    fs.writeFileSync(databaseFilePath, JSON.stringify(entities));
+      fs.writeFileSync(databaseFilePath, JSON.stringify(entities));
 
-    return product;
+      return product;
+    } else {
+      throw new BadRequestException('Código ou nome do produto já cadastrado');
+    }
   }
 
   findAll() {
@@ -50,6 +56,22 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
+  validateCodeProduct(codigo: number, nome: string) {
+    const entities = JSON.parse(
+      fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
+    );
+
+    const hasProduct = entities[PRODUCTS].find((entitie) => {
+      return entitie.codigo === codigo || entitie.codigo === nome;
+    });
+
+    if (hasProduct) {
+      return false;
+    }
+
+    return true;
+  }
+
   update(id: string, updateProductDto: UpdateProductDto) {
     const dbEntities = JSON.parse(
       fs.readFileSync(databaseFilePath, { encoding: 'utf-8' }),
@@ -59,11 +81,17 @@ export class ProductService {
       return entitie.id !== id;
     });
 
-    const products = [...product, { ...updateProductDto, id: uuid() }];
+    if (
+      this.validateCodeProduct(updateProductDto.codigo, updateProductDto.nome)
+    ) {
+      const products = [...product, { ...updateProductDto, id: uuid() }];
 
-    fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
+      fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
 
-    return updateProductDto;
+      return updateProductDto;
+    } else {
+      throw new BadRequestException('Código ou nome do produto já cadastrado');
+    }
   }
 
   remove(id: string) {

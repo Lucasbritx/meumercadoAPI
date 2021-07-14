@@ -12,4 +12,8 @@ export class CreateProductDto {
   @IsNotEmpty({ message: 'Valor não pode ser vazio' })
   @IsNumber()
   valor: number;
+
+  @IsNotEmpty({ message: 'Valor não pode ser vazio' })
+  @IsNumber()
+  codigo: number;
 }
