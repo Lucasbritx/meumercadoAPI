@@ -2,7 +2,7 @@
 
 ### - É necessário ter node instalado em sua máquina
 
-### - Após abri o projeto em uma IDE
+### - Após abrir o projeto em uma IDE
 
 ### - Rode no terminal o comando `npm install` ou `yarn`
 
