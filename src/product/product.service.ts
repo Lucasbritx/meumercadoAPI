@@ -74,14 +74,14 @@ export class ProductService {
       return entitie.nome === updateProductDto.nome;
     });
 
-    if (!hasProduct) {
+    if (hasProduct) {
       const products = [...product, { ...updateProductDto, id: uuid() }];
 
       fs.writeFileSync(databaseFilePath, JSON.stringify({ products }));
 
       return updateProductDto;
     } else {
-      throw new BadRequestException('Código ou nome do produto já cadastrado');
+      throw new BadRequestException('Produto não encontrado');
     }
   }
 
@@ -98,3 +98,4 @@ export class ProductService {
     return '';
   }
 }
+
